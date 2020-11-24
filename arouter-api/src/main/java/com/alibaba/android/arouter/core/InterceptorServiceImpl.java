@@ -11,6 +11,9 @@ import com.alibaba.android.arouter.facade.template.IInterceptor;
 import com.alibaba.android.arouter.thread.CancelableCountDownLatch;
 import com.alibaba.android.arouter.utils.MapUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -28,9 +31,10 @@ import static com.alibaba.android.arouter.utils.Consts.TAG;
 public class InterceptorServiceImpl implements InterceptorService {
     private static boolean interceptorHasInit;
     private static final Object interceptorInitLock = new Object();
+    private List<IInterceptor> interceptors = new ArrayList<>();
 
     @Override
-    public void doInterceptions(final Postcard postcard, final InterceptorCallback callback) {
+    public void doInterceptions(final String[] interceptors, final Postcard postcard, final InterceptorCallback callback) {
         if (MapUtils.isNotEmpty(Warehouse.interceptorsIndex)) {
 
             checkInterceptorsInitStatus();
@@ -39,6 +43,12 @@ public class InterceptorServiceImpl implements InterceptorService {
                 callback.onInterrupt(new HandlerException("Interceptors initialization takes too much time."));
                 return;
             }
+
+            if (interceptors != null && interceptors.length > 0) {
+                Warehouse.interceptors.get(0).
+                this.interceptors = Arrays.asList(interceptors);
+            }
+
 
             LogisticsCenter.executor.execute(new Runnable() {
                 @Override

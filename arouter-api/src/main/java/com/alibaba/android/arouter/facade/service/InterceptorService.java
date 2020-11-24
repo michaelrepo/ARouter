@@ -16,5 +16,5 @@ public interface InterceptorService extends IProvider {
     /**
      * Do interceptions
      */
-    void doInterceptions(Postcard postcard, InterceptorCallback callback);
+    void doInterceptions(String[] interceptors, Postcard postcard, InterceptorCallback callback);
 }

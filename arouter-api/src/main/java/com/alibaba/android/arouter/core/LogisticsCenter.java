@@ -88,13 +88,14 @@ public class LogisticsCenter {
                             + " should implements one of IRouteRoot/IProviderGroup/IInterceptorGroup.");
                 }
             } catch (Exception e) {
-                logger.error(TAG,"register class error:" + className);
+                logger.error(TAG, "register class error:" + className);
             }
         }
     }
 
     /**
      * method for arouter-auto-register plugin to register Routers
+     *
      * @param routeRoot IRouteRoot implementation class in the package: com.alibaba.android.arouter.core.routers
      */
     private static void registerRouteRoot(IRouteRoot routeRoot) {
@@ -106,6 +107,7 @@ public class LogisticsCenter {
 
     /**
      * method for arouter-auto-register plugin to register Interceptors
+     *
      * @param interceptorGroup IInterceptorGroup implementation class in the package: com.alibaba.android.arouter.core.routers
      */
     private static void registerInterceptor(IInterceptorGroup interceptorGroup) {
@@ -117,6 +119,7 @@ public class LogisticsCenter {
 
     /**
      * method for arouter-auto-register plugin to register Providers
+     *
      * @param providerGroup IProviderGroup implementation class in the package: com.alibaba.android.arouter.core.routers
      */
     private static void registerProvider(IProviderGroup providerGroup) {
@@ -291,10 +294,13 @@ public class LogisticsCenter {
                         }
                     }
                     postcard.setProvider(instance);
-                    postcard.greenChannel();    // Provider should skip all of interceptors
+                    postcard.skipInterceptors();    // Provider should skip all of interceptors
+                    postcard.setInterceptors();     // Clear interceptors
+
                     break;
                 case FRAGMENT:
-                    postcard.greenChannel();    // Fragment needn't interceptors
+                    postcard.skipInterceptors();    // Fragment needn't interceptors
+                    postcard.setInterceptors();     // Clear interceptors
                 default:
                     break;
             }
@@ -355,7 +361,7 @@ public class LogisticsCenter {
     }
 
     public synchronized static void addRouteGroupDynamic(String groupName, IRouteGroup group) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        if (Warehouse.groupsIndex.containsKey(groupName)){
+        if (Warehouse.groupsIndex.containsKey(groupName)) {
             // If this group is included, but it has not been loaded
             // load this group first, because dynamic route has high priority.
             Warehouse.groupsIndex.get(groupName).getConstructor().newInstance().loadInto(Warehouse.routes);

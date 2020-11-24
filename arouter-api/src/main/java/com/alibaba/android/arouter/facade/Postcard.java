@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
@@ -35,10 +36,11 @@ public final class Postcard extends RouteMeta {
     private int flags = 0;         // Flags of route
     private int timeout = 300;      // Navigation timeout, TimeUnit.Second
     private IProvider provider;     // It will be set value, if this postcard was provider.
-    private boolean greenChannel;
+    private boolean greenChannel = true;
     private SerializationService serializationService;
     private Context context;        // May application or activity, check instance type before use it.
     private String action;
+    private String[] interceptors;
 
     // Animation
     private Bundle optionsCompat;    // The transition animation of activity
@@ -81,9 +83,6 @@ public final class Postcard extends RouteMeta {
         this.mBundle = (null == bundle ? new Bundle() : bundle);
     }
 
-    public boolean isGreenChannel() {
-        return greenChannel;
-    }
 
     public Object getTag() {
         return tag;
@@ -168,14 +167,63 @@ public final class Postcard extends RouteMeta {
         ARouter.getInstance().navigation(mContext, this, requestCode, callback);
     }
 
+
+    /**
+     * Navigation to the route with path in postcard.
+     *
+     * @param fragment    Activity and so on.
+     * @param requestCode startActivityForResult's param
+     */
+    public void navigation(Fragment fragment, int requestCode) {
+        navigation(fragment, requestCode, null);
+    }
+
+    /**
+     * Navigation to the route with path in postcard.
+     *
+     * @param fragment    Activity and so on.
+     * @param requestCode startActivityForResult's param
+     */
+    public void navigation(Fragment fragment, int requestCode, NavigationCallback callback) {
+        ARouter.getInstance().navigation(fragment, this, requestCode, callback);
+    }
+
     /**
      * Green channel, it will skip all of interceptors.
      *
      * @return this
      */
-    public Postcard greenChannel() {
-        this.greenChannel = true;
+    public Postcard useInterceptors() {
+        this.greenChannel = false;
         return this;
+    }
+
+    /**
+     * Green channel, it will skip all of interceptors.
+     *
+     * @return this
+     */
+    public Postcard skipInterceptors() {
+        if (interceptors != null && interceptors.length > 0) {
+            this.greenChannel = false;
+        } else {
+            this.greenChannel = true;
+        }
+        return this;
+    }
+
+    public boolean isSkipInterceptors() {
+        return greenChannel;
+    }
+
+    public Postcard setInterceptors(String... interceptors) {
+        this.interceptors = interceptors;
+        this.greenChannel = false;
+        return this;
+    }
+
+    public String[] getInterceptors() {
+        return interceptors;
     }
 
     /**
@@ -610,4 +658,6 @@ public final class Postcard extends RouteMeta {
     public void setContext(Context context) {
         this.context = context;
     }
+
+
 }

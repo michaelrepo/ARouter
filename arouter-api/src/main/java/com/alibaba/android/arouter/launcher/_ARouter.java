@@ -276,12 +276,18 @@ final class _ARouter {
     /**
      * Use router navigation.
      *
-     * @param context     Activity or null.
+     * @param object      Activity or Fragment or null.
      * @param postcard    Route metas
      * @param requestCode RequestCode
      * @param callback    cb
      */
-    protected Object navigation(final Context context, final Postcard postcard, final int requestCode, final NavigationCallback callback) {
+    protected Object navigation(final Object object, final Postcard postcard, final int requestCode, final NavigationCallback callback) {
+        Context context;
+        if (object instanceof Context) {
+            context = (Context) object;
+        } else {
+            context = ((android.support.v4.app.Fragment) object).getContext();
+        }
         PretreatmentService pretreatmentService = ARouter.getInstance().navigation(PretreatmentService.class);
         if (null != pretreatmentService && !pretreatmentService.onPretreatment(context, postcard)) {
             // Pretreatment failed, navigation canceled.
@@ -324,9 +330,9 @@ final class _ARouter {
         if (null != callback) {
             callback.onFound(postcard);
         }
-
-        if (!postcard.isGreenChannel()) {   // It must be run in async thread, maybe interceptor cost too mush time made ANR.
-            interceptorService.doInterceptions(postcard, new InterceptorCallback() {
+        //设置了拦截器 或者 使用拦截，都执行拦截
+        if ((postcard.getInterceptors() != null && postcard.getInterceptors().length > 0) || !postcard.isSkipInterceptors()) {   // It must be run in async thread, maybe interceptor cost too mush time made ANR.
+            interceptorService.doInterceptions(postcard.getInterceptors(), postcard, new InterceptorCallback() {
                 /**
                  * Continue process
                  *
@@ -334,7 +340,7 @@ final class _ARouter {
                  */
                 @Override
                 public void onContinue(Postcard postcard) {
-                    _navigation(postcard, requestCode, callback);
+                    _navigation(object, postcard, requestCode, callback);
                 }
 
                 /**
@@ -352,14 +358,15 @@ final class _ARouter {
                 }
             });
         } else {
-            return _navigation(postcard, requestCode, callback);
+            return _navigation(object, postcard, requestCode, callback);
         }
 
         return null;
     }
 
-    private Object _navigation(final Postcard postcard, final int requestCode, final NavigationCallback callback) {
+    private Object _navigation(final Object object, final Postcard postcard, final int requestCode, final NavigationCallback callback) {
         final Context currentContext = postcard.getContext();
+
 
         switch (postcard.getType()) {
             case ACTIVITY:
@@ -388,7 +395,11 @@ final class _ARouter {
                 runInMainThread(new Runnable() {
                     @Override
                     public void run() {
-                        startActivity(requestCode, currentContext, intent, postcard, callback);
+                        if (object instanceof android.support.v4.app.Fragment) {
+                            startActivity(currentContext, (android.support.v4.app.Fragment) object, intent, requestCode, postcard, callback);
+                        } else {
+                            startActivity(requestCode, currentContext, intent, postcard, callback);
+                        }
                     }
                 });
 
@@ -451,6 +462,18 @@ final class _ARouter {
 
         if ((-1 != postcard.getEnterAnim() && -1 != postcard.getExitAnim()) && currentContext instanceof Activity) {    // Old version.
             ((Activity) currentContext).overridePendingTransition(postcard.getEnterAnim(), postcard.getExitAnim());
+        }
+
+        if (null != callback) { // Navigation over.
+            callback.onArrival(postcard);
+        }
+    }
+
+
+    private void startActivity(Context currentContext, android.support.v4.app.Fragment fragment, Intent intent, int requestCode, Postcard postcard, NavigationCallback callback) {
+        fragment.startActivityForResult(intent, requestCode, postcard.getOptionsBundle());
+        if ((-1 != postcard.getEnterAnim() && -1 != postcard.getExitAnim()) && currentContext instanceof Activity) {    // Old version.
+            ((Activity) postcard.getContext()).overridePendingTransition(postcard.getEnterAnim(), postcard.getExitAnim());
         }
 
         if (null != callback) { // Navigation over.

@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //         .navigation();
 
                 Uri testUriMix = Uri.parse("arouter://m.aliyun.com/test/activity2");
-                ARouter.getInstance().build(testUriMix)
+                ARouter.getInstance().build(testUriMix).setInterceptors("/interceptor/login")
                         .withString("key1", "value1")
                         .navigation();
 
