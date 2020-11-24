@@ -282,11 +282,13 @@ final class _ARouter {
      * @param callback    cb
      */
     protected Object navigation(final Object object, final Postcard postcard, final int requestCode, final NavigationCallback callback) {
-        Context context;
-        if (object instanceof Context) {
-            context = (Context) object;
-        } else {
-            context = ((android.support.v4.app.Fragment) object).getContext();
+        Context context=null;
+        if (object != null) {
+            if (object instanceof Context) {
+                context = (Context) object;
+            } else {
+                context = ((android.support.v4.app.Fragment) object).getContext();
+            }
         }
         PretreatmentService pretreatmentService = ARouter.getInstance().navigation(PretreatmentService.class);
         if (null != pretreatmentService && !pretreatmentService.onPretreatment(context, postcard)) {

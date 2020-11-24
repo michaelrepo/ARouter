@@ -118,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.interceptor:
                 ARouter.getInstance()
                         .build("/test/activity4")
+                        .useInterceptors()
+                        .setInterceptors("test1")
                         .navigation(this, new NavCallback() {
                             @Override
                             public void onArrival(Postcard postcard) {

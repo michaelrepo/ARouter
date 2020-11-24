@@ -4,7 +4,7 @@ apply plugin: 'java'
 // JitPack Maven
 apply plugin: 'com.github.dcendents.android-maven'
 // Your Group
-group='com.github.michaelrepo'
+group = 'com.github.michaelrepo'
 
 compileJava {
     sourceCompatibility = '1.8'
@@ -12,7 +12,8 @@ compileJava {
 }
 
 dependencies {
-    implementation 'com.alibaba:arouter-annotation:1.0.6'
+//    implementation 'com.alibaba:arouter-annotation:1.0.6'
+    implementation project(':arouter-annotation')
 
     annotationProcessor 'com.google.auto.service:auto-service:1.0-rc7'
     compileOnly 'com.google.auto.service:auto-service-annotations:1.0-rc7'

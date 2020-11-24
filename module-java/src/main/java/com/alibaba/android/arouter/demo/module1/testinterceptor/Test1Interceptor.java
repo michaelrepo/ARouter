@@ -18,7 +18,7 @@ import com.alibaba.android.arouter.facade.template.IInterceptor;
  * @version 1.0
  * @since 2017/1/3 11:20
  */
-@Interceptor(priority = 7)
+@Interceptor(priority = 7,name = "test1")
 public class Test1Interceptor implements IInterceptor {
     /**
      * The operation of this interceptor.

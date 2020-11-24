@@ -1,13 +1,13 @@
 apply plugin: 'groovy'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group = 'com.github.michaelrepo'
+group='com.github.michaelrepo'
 
 dependencies {
-    implementation gradleApi()
-    implementation localGroovy()
+    compile gradleApi()
+    compile localGroovy()
 }
 
 dependencies {
-    implementation 'com.android.tools.build:gradle:2.1.3'
+    compile 'com.android.tools.build:gradle:2.1.3'
 }

@@ -118,7 +118,7 @@ public class InterceptorProcessor extends BaseProcessor {
              */
             ParameterizedTypeName inputMapTypeOfTollgate = ParameterizedTypeName.get(
                     ClassName.get(Map.class),
-                    ClassName.get(Integer.class),
+                    ClassName.get(String.class),
                     ParameterizedTypeName.get(
                             ClassName.get(Class.class),
                             WildcardTypeName.subtypeOf(ClassName.get(type_ITollgate))
@@ -139,12 +139,7 @@ public class InterceptorProcessor extends BaseProcessor {
                 // Build method body
                 for (Map.Entry<Integer, Element> entry : interceptors.entrySet()) {
                     String interceptorName = entry.getValue().getAnnotation(Interceptor.class).name();
-                    if (interceptorName == null) {
-                        throw new IllegalArgumentException(
-                                String.format(Locale.getDefault(), "[%s] must be set name", entry.getValue().getSimpleName())
-                        );
-                    }
-                    loadIntoMethodOfTollgateBuilder.addStatement("interceptors.put(" + interceptorName + ", $T.class)", ClassName.get((TypeElement) entry.getValue()));
+                    loadIntoMethodOfTollgateBuilder.addStatement("interceptors.put( $S, $T.class)", interceptorName, ClassName.get((TypeElement) entry.getValue()));
                 }
             }
 

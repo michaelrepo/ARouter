@@ -218,7 +218,12 @@ public final class Postcard extends RouteMeta {
 
     public Postcard setInterceptors(String... interceptors) {
         this.interceptors = interceptors;
-        this.greenChannel = false;
+        if (interceptors != null && interceptors.length > 0) {
+            this.greenChannel = false;
+        } else {
+            this.greenChannel = true;
+
+        }
         return this;
     }
 
