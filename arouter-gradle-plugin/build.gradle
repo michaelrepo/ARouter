@@ -1,21 +1,13 @@
 apply plugin: 'groovy'
+apply plugin: 'com.github.dcendents.android-maven'
 
-ext {
-    bintrayName = 'arouter-register'
-    artifact = bintrayName
-    libraryName = 'ARouter register gradle plugin'
-    libraryDescription = 'A gradle plugin used for arouter route map register'
-    libraryVersion = arouter_register_version
+group = 'com.github.michaelrepo'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
 }
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
+    implementation 'com.android.tools.build:gradle:2.1.3'
 }
-
-dependencies {
-    compile 'com.android.tools.build:gradle:2.1.3'
-}
-
-apply from: '../install.gradle'
-apply from: '../bintray.gradle'

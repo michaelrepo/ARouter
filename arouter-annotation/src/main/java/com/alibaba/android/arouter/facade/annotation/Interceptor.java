@@ -24,5 +24,5 @@ public @interface Interceptor {
     /**
      * The name of interceptor, may be used to generate javadoc.
      */
-    String name() default "Default";
+    String name();
 }

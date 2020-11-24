@@ -1,12 +1,10 @@
 apply plugin: 'com.android.library'
 
-ext {
-    bintrayName = 'arouter-api'
-    artifact = bintrayName
-    libraryName = 'ARouter sdk'
-    libraryDescription = 'A router for android'
-    libraryVersion = arouter_main_version
-}
+// JitPack Maven
+apply plugin: 'com.github.dcendents.android-maven'
+// Your Group
+group='com.github.michaelrepo'
+
 
 android {
     compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
@@ -43,6 +41,3 @@ dependencies {
     api 'com.alibaba:arouter-annotation:1.0.6'
     implementation "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
 }
-
-apply from: '../install.gradle'
-apply from: '../bintray.gradle'

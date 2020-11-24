@@ -31,7 +31,7 @@ import static com.alibaba.android.arouter.utils.Consts.TAG;
 public class InterceptorServiceImpl implements InterceptorService {
     private static boolean interceptorHasInit;
     private static final Object interceptorInitLock = new Object();
-    private List<IInterceptor> interceptors = new ArrayList<>();
+    private static final List<IInterceptor> allInterceptors = new ArrayList<>();
 
     @Override
     public void doInterceptions(final String[] interceptors, final Postcard postcard, final InterceptorCallback callback) {
@@ -43,17 +43,25 @@ public class InterceptorServiceImpl implements InterceptorService {
                 callback.onInterrupt(new HandlerException("Interceptors initialization takes too much time."));
                 return;
             }
-
+            allInterceptors.clear();
             if (interceptors != null && interceptors.length > 0) {
-                Warehouse.interceptors.get(0).
-                this.interceptors = Arrays.asList(interceptors);
+
+                for (String name : interceptors) {
+                    for (IInterceptor interceptor : Warehouse.interceptors) {
+                        if (interceptor.getClass() == Warehouse.interceptorsIndex.get(name)) {
+                            allInterceptors.add(interceptor);
+                        }
+                    }
+                }
+            } else {
+                allInterceptors.addAll(Warehouse.interceptors);
             }
 
 
             LogisticsCenter.executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    CancelableCountDownLatch interceptorCounter = new CancelableCountDownLatch(Warehouse.interceptors.size());
+                    CancelableCountDownLatch interceptorCounter = new CancelableCountDownLatch(allInterceptors.size());
                     try {
                         _execute(0, interceptorCounter, postcard);
                         interceptorCounter.await(postcard.getTimeout(), TimeUnit.SECONDS);
@@ -82,8 +90,8 @@ public class InterceptorServiceImpl implements InterceptorService {
      * @param postcard routeMeta
      */
     private static void _execute(final int index, final CancelableCountDownLatch counter, final Postcard postcard) {
-        if (index < Warehouse.interceptors.size()) {
-            IInterceptor iInterceptor = Warehouse.interceptors.get(index);
+        if (index < allInterceptors.size()) {
+            IInterceptor iInterceptor = allInterceptors.get(index);
             iInterceptor.process(postcard, new InterceptorCallback() {
                 @Override
                 public void onContinue(Postcard postcard) {
@@ -115,7 +123,7 @@ public class InterceptorServiceImpl implements InterceptorService {
             @Override
             public void run() {
                 if (MapUtils.isNotEmpty(Warehouse.interceptorsIndex)) {
-                    for (Map.Entry<Integer, Class<? extends IInterceptor>> entry : Warehouse.interceptorsIndex.entrySet()) {
+                    for (Map.Entry<String, Class<? extends IInterceptor>> entry : Warehouse.interceptorsIndex.entrySet()) {
                         Class<? extends IInterceptor> interceptorClass = entry.getValue();
                         try {
                             IInterceptor iInterceptor = interceptorClass.getConstructor().newInstance();

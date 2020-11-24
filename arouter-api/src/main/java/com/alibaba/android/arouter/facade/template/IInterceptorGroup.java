@@ -15,5 +15,5 @@ public interface IInterceptorGroup {
      *
      * @param interceptor input
      */
-    void loadInto(Map<Integer, Class<? extends IInterceptor>> interceptor);
+    void loadInto(Map<String, Class<? extends IInterceptor>> interceptor);
 }
