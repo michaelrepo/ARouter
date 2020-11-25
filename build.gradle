@@ -9,6 +9,8 @@ buildscript {
         maven {
             url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
         }
+        maven { url 'https://jitpack.io' }
+
         mavenCentral()
         jcenter()
         google()
@@ -28,5 +30,7 @@ allprojects {
     repositories {
         jcenter()
         google()
+        maven { url 'https://jitpack.io' }
+
     }
 }
