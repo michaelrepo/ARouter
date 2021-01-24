@@ -49,7 +49,6 @@ dependencies {
     // 开发中依赖对方的 service 包
     implementation project(':module-java-export')
     implementation project(':module-java')
-
     implementation project(':module-kotlin')
 
     implementation "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
