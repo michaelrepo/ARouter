@@ -517,7 +517,7 @@ final class _ARouter {
 
             return true;
         } catch (Exception exception) {
-            logger.error(Consts.TAG, "Add route group dynamic exception! " + exception.getMessage());
+            logger.error(Consts.TAG, "Add route group dynamic exception!", exception);
         }
 
         return false;

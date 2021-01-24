@@ -88,14 +88,13 @@ public class LogisticsCenter {
                             + " should implements one of IRouteRoot/IProviderGroup/IInterceptorGroup.");
                 }
             } catch (Exception e) {
-                logger.error(TAG, "register class error:" + className);
+                logger.error(TAG,"register class error:" + className, e);
             }
         }
     }
 
     /**
      * method for arouter-auto-register plugin to register Routers
-     *
      * @param routeRoot IRouteRoot implementation class in the package: com.alibaba.android.arouter.core.routers
      */
     private static void registerRouteRoot(IRouteRoot routeRoot) {
@@ -107,7 +106,6 @@ public class LogisticsCenter {
 
     /**
      * method for arouter-auto-register plugin to register Interceptors
-     *
      * @param interceptorGroup IInterceptorGroup implementation class in the package: com.alibaba.android.arouter.core.routers
      */
     private static void registerInterceptor(IInterceptorGroup interceptorGroup) {
@@ -119,7 +117,6 @@ public class LogisticsCenter {
 
     /**
      * method for arouter-auto-register plugin to register Providers
-     *
      * @param providerGroup IProviderGroup implementation class in the package: com.alibaba.android.arouter.core.routers
      */
     private static void registerProvider(IProviderGroup providerGroup) {
@@ -290,7 +287,8 @@ public class LogisticsCenter {
                             Warehouse.providers.put(providerMeta, provider);
                             instance = provider;
                         } catch (Exception e) {
-                            throw new HandlerException("Init provider failed! " + e.getMessage());
+                            logger.error(TAG, "Init provider failed!", e);
+                            throw new HandlerException("Init provider failed!");
                         }
                     }
                     postcard.setProvider(instance);
