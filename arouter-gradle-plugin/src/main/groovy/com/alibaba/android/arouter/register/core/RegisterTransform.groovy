@@ -67,6 +67,10 @@ class RegisterTransform extends Transform {
         long startTime = System.currentTimeMillis()
         boolean leftSlash = File.separator == '/'
 
+        if (!isIncremental) {
+            outputProvider.deleteAll()
+        }
+
         inputs.each { TransformInput input ->
 
             // scan all jars
@@ -100,7 +104,7 @@ class RegisterTransform extends Transform {
                     if (!leftSlash) {
                         path = path.replaceAll("\\\\", "/")
                     }
-                    if(file.isFile() && ScanUtil.shouldProcessClass(path)){
+                    if (file.isFile() && ScanUtil.shouldProcessClass(path)) {
                         ScanUtil.scanClass(file)
                     }
                 }
