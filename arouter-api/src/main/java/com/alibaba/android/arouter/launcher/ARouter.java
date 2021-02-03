@@ -3,12 +3,11 @@ package com.alibaba.android.arouter.launcher;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.alibaba.android.arouter.exception.InitException;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
-import com.alibaba.android.arouter.facade.model.RouteMeta;
 import com.alibaba.android.arouter.facade.template.ILogger;
 import com.alibaba.android.arouter.facade.template.IRouteGroup;
 import com.alibaba.android.arouter.utils.Consts;

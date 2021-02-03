@@ -2,13 +2,15 @@ package com.alibaba.android.arouter.launcher;
 
 import android.app.Activity;
 import android.app.Application;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -282,12 +284,12 @@ final class _ARouter {
      * @param callback    cb
      */
     protected Object navigation(final Object object, final Postcard postcard, final int requestCode, final NavigationCallback callback) {
-        Context context=null;
+        Context context = null;
         if (object != null) {
             if (object instanceof Context) {
                 context = (Context) object;
             } else {
-                context = ((android.support.v4.app.Fragment) object).getContext();
+                context = ((Fragment) object).getContext();
             }
         }
         PretreatmentService pretreatmentService = ARouter.getInstance().navigation(PretreatmentService.class);
@@ -397,8 +399,8 @@ final class _ARouter {
                 runInMainThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (object instanceof android.support.v4.app.Fragment) {
-                            startActivity(currentContext, (android.support.v4.app.Fragment) object, intent, requestCode, postcard, callback);
+                        if (object instanceof Fragment) {
+                            startActivity(currentContext, (Fragment) object, intent, requestCode, postcard, callback);
                         } else {
                             startActivity(requestCode, currentContext, intent, postcard, callback);
                         }
@@ -414,12 +416,7 @@ final class _ARouter {
                 Class<?> fragmentMeta = postcard.getDestination();
                 try {
                     Object instance = fragmentMeta.getConstructor().newInstance();
-                    if (instance instanceof Fragment) {
-                        ((Fragment) instance).setArguments(postcard.getExtras());
-                    } else if (instance instanceof android.support.v4.app.Fragment) {
-                        ((android.support.v4.app.Fragment) instance).setArguments(postcard.getExtras());
-                    }
-
+                    ((Fragment) instance).setArguments(postcard.getExtras());
                     return instance;
                 } catch (Exception ex) {
                     logger.error(Consts.TAG, "Fetch fragment instance error, " + TextUtils.formatStackTrace(ex.getStackTrace()));
@@ -472,7 +469,7 @@ final class _ARouter {
     }
 
 
-    private void startActivity(Context currentContext, android.support.v4.app.Fragment fragment, Intent intent, int requestCode, Postcard postcard, NavigationCallback callback) {
+    private void startActivity(Context currentContext, Fragment fragment, Intent intent, int requestCode, Postcard postcard, NavigationCallback callback) {
         fragment.startActivityForResult(intent, requestCode, postcard.getOptionsBundle());
         if ((-1 != postcard.getEnterAnim() && -1 != postcard.getExitAnim()) && currentContext instanceof Activity) {    // Old version.
             ((Activity) postcard.getContext()).overridePendingTransition(postcard.getEnterAnim(), postcard.getExitAnim());
