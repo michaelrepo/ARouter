@@ -159,11 +159,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .navigation();
                 break;
             case R.id.navByName:
-                ((HelloService) ARouter.getInstance().build("/yourservicegroupname/hello").navigation()).sayHello("mike", serviceDataWrapper -> {
-                    if (serviceDataWrapper.isSuccess()) {
-                        Toast.makeText(this, serviceDataWrapper.data, Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(this, serviceDataWrapper.exception.msg, Toast.LENGTH_LONG).show();
+                ((HelloService) ARouter.getInstance().build("/yourservicegroupname/hello").navigation()).sayHello("mike", new ServiceCallback<String>() {
+                    @Override
+                    public void result(ServiceDataWrapper<String> serviceDataWrapper) {
+
                     }
                 });
                 break;

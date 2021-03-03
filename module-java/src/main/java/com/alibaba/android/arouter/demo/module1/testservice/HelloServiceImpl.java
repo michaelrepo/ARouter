@@ -24,11 +24,6 @@ import com.alibaba.android.arouter.facade.callback.ServiceDataWrapper;
 public class HelloServiceImpl implements HelloService {
     Context mContext;
 
-    @Override
-    public void sayHello(String name, ServiceCallback serviceCallback) {
-        if (serviceCallback != null)
-            serviceCallback.result(new ServiceDataWrapper<>(new ServiceException("调用错误")));
-    }
 
     /**
      * Do your init work in this method, it well be call when processor has been load.
@@ -39,5 +34,12 @@ public class HelloServiceImpl implements HelloService {
     public void init(Context context) {
         mContext = context;
         Log.e("testService", HelloService.class.getName() + " has init.");
+    }
+
+    @Override
+    public void sayHello(String name, ServiceCallback<String> serviceCallback) {
+        if (serviceCallback != null)
+            serviceCallback.result(new ServiceDataWrapper<>(new ServiceException("调用错误")));
+        serviceCallback.result(new ServiceDataWrapper<>("成功"));
     }
 }
