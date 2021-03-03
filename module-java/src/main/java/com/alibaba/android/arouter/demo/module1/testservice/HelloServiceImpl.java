@@ -4,8 +4,14 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+
+import androidx.annotation.NonNull;
+
 import com.alibaba.android.arouter.demo.service.HelloService;
+import com.alibaba.android.arouter.exception.ServiceException;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.facade.callback.ServiceCallback;
+import com.alibaba.android.arouter.facade.callback.ServiceDataWrapper;
 
 /**
  * TODO feature
@@ -19,8 +25,9 @@ public class HelloServiceImpl implements HelloService {
     Context mContext;
 
     @Override
-    public void sayHello(String name) {
-        Toast.makeText(mContext, "Hello " + name, Toast.LENGTH_SHORT).show();
+    public void sayHello(String name, ServiceCallback serviceCallback) {
+        if (serviceCallback != null)
+            serviceCallback.result(new ServiceDataWrapper<>(new ServiceException("调用错误")));
     }
 
     /**

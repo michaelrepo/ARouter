@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -19,6 +22,8 @@ import com.alibaba.android.arouter.demo.service.HelloService;
 import com.alibaba.android.arouter.demo.module1.testservice.SingleService;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.callback.NavCallback;
+import com.alibaba.android.arouter.facade.callback.ServiceCallback;
+import com.alibaba.android.arouter.facade.callback.ServiceDataWrapper;
 import com.alibaba.android.arouter.facade.enums.RouteType;
 import com.alibaba.android.arouter.facade.model.RouteMeta;
 import com.alibaba.android.arouter.facade.template.IRouteGroup;
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ARouter.init(getApplication());
                 break;
             case R.id.normalNavigation:
+                ARouter.getInstance().navigation(HelloService.class).sayHello("", null);
                 ARouter.getInstance()
                         .build("/test/activity2")
                         .navigation();
@@ -153,10 +159,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .navigation();
                 break;
             case R.id.navByName:
-                ((HelloService) ARouter.getInstance().build("/yourservicegroupname/hello").navigation()).sayHello("mike");
+                ((HelloService) ARouter.getInstance().build("/yourservicegroupname/hello").navigation()).sayHello("mike", serviceDataWrapper -> {
+                    if (serviceDataWrapper.isSuccess()) {
+                        Toast.makeText(this, serviceDataWrapper.data, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(this, serviceDataWrapper.exception.msg, Toast.LENGTH_LONG).show();
+                    }
+                });
                 break;
             case R.id.navByType:
-                ARouter.getInstance().navigation(HelloService.class).sayHello("mike");
+                ARouter.getInstance().navigation(HelloService.class).sayHello("mike", null);
                 break;
             case R.id.navToMoudle1:
                 ARouter.getInstance().build("/module/1").navigation();

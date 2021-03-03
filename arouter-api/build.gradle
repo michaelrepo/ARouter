@@ -3,7 +3,7 @@ apply plugin: 'com.android.library'
 // JitPack Maven
 apply plugin: 'com.github.dcendents.android-maven'
 // Your Group
-group='com.github.michaelrepo'
+group = 'com.github.michaelrepo'
 
 
 android {
@@ -22,8 +22,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -41,6 +41,6 @@ dependencies {
     api project(':arouter-annotation')
 //    annotationProcessor 'com.github.michaelrepo.arouter:arouter-compiler:1.5.3'
 //    api 'com.github.michaelrepo.arouter:arouter-annotation:1.5.3'
-    api 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    compileOnly 'com.google.android.material:material:1.2.1'
+    compileOnly 'androidx.appcompat:appcompat:1.2.0'
 }

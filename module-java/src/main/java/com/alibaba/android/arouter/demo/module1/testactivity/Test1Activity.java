@@ -92,7 +92,7 @@ public class Test1Activity extends BaseActivity {
                 objList,
                 map
         );
-        helloService.sayHello("Hello moto.");
+//        helloService.sayHello("Hello moto.",null);
 
         ((TextView) findViewById(R.id.test)).setText("I am " + Test1Activity.class.getName());
         ((TextView) findViewById(R.id.test2)).setText(params);
