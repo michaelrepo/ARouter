@@ -20,6 +20,7 @@ import com.alibaba.android.arouter.exception.HandlerException;
 import com.alibaba.android.arouter.exception.InitException;
 import com.alibaba.android.arouter.exception.NoRouteFoundException;
 import com.alibaba.android.arouter.facade.Postcard;
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback;
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.alibaba.android.arouter.facade.model.RouteMeta;
@@ -51,6 +52,7 @@ final class _ARouter {
     private volatile static boolean autoInject = false;
     private volatile static _ARouter instance = null;
     private volatile static boolean hasInit = false;
+    private static String recordLastActivityKey = null;
     private volatile static ThreadPoolExecutor executor = DefaultPoolExecutor.getInstance();
     private static Handler mHandler;
     private static Context mContext;
@@ -167,6 +169,10 @@ final class _ARouter {
         if (null != userLogger) {
             logger = userLogger;
         }
+    }
+
+    public static void enableRecordLastActivity(String key) {
+        recordLastActivityKey = key;
     }
 
     static void inject(Object thiz) {
@@ -331,6 +337,10 @@ final class _ARouter {
             return null;
         }
 
+        if (recordLastActivityKey != null && object != null) {
+            processRecordLastActivity(object, postcard);
+        }
+
         if (null != callback) {
             callback.onFound(postcard);
         }
@@ -368,7 +378,29 @@ final class _ARouter {
         return null;
     }
 
-    private Object _navigation(final Object object, final Postcard postcard, final int requestCode, final NavigationCallback callback) {
+    /**
+     * 处理记录上个页面的名字
+     */
+    private void processRecordLastActivity(Object object, Postcard postcard) {
+        String routeName;
+        Route route = null;
+        if (object instanceof Activity) {
+            route = object.getClass().getAnnotation(Route.class);
+
+        } else if (object instanceof Fragment && ((Fragment) object).getActivity() != null) {
+            route = ((Fragment) object).getActivity().getClass().getAnnotation(Route.class);
+        }
+        if (route != null) {
+            routeName = route.name();
+
+            if (!TextUtils.isEmpty(routeName)) {
+                postcard.getExtras().putString(recordLastActivityKey, routeName);
+            }
+        }
+    }
+
+    private Object _navigation(final Object object, final Postcard postcard,
+                               final int requestCode, final NavigationCallback callback) {
         final Context currentContext = postcard.getContext();
 
 
@@ -448,7 +480,8 @@ final class _ARouter {
      *
      * @see ActivityCompat
      */
-    private void startActivity(int requestCode, Context currentContext, Intent intent, Postcard postcard, NavigationCallback callback) {
+    private void startActivity(int requestCode, Context currentContext, Intent
+            intent, Postcard postcard, NavigationCallback callback) {
         if (requestCode >= 0) {  // Need start for result
             if (currentContext instanceof Activity) {
                 ActivityCompat.startActivityForResult((Activity) currentContext, intent, requestCode, postcard.getOptionsBundle());
@@ -469,7 +502,8 @@ final class _ARouter {
     }
 
 
-    private void startActivity(Context currentContext, Fragment fragment, Intent intent, int requestCode, Postcard postcard, NavigationCallback callback) {
+    private void startActivity(Context currentContext, Fragment fragment, Intent intent,
+                               int requestCode, Postcard postcard, NavigationCallback callback) {
         fragment.startActivityForResult(intent, requestCode, postcard.getOptionsBundle());
         if ((-1 != postcard.getEnterAnim() && -1 != postcard.getExitAnim()) && currentContext instanceof Activity) {    // Old version.
             ((Activity) postcard.getContext()).overridePendingTransition(postcard.getEnterAnim(), postcard.getExitAnim());

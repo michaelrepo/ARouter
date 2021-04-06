@@ -3,6 +3,7 @@ package com.alibaba.android.arouter.launcher;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+
 import androidx.fragment.app.Fragment;
 
 import com.alibaba.android.arouter.exception.InitException;
@@ -128,6 +129,15 @@ public final class ARouter {
     }
 
     /**
+     * 开启记录跳转来源Activity的name，并通过bundle传递到目标Activity
+     *
+     * @param key 全局通用bundle的key
+     */
+    public static void enableRecordLastActivity(String key) {
+        _ARouter.enableRecordLastActivity(key);
+    }
+
+    /**
      * Inject params and services.
      */
     public void inject(Object thiz) {
@@ -200,6 +210,7 @@ public final class ARouter {
 
     /**
      * Add route group dynamic.
+     *
      * @param group route group.
      * @return add result.
      */
