@@ -26,6 +26,7 @@ public final class ARouter {
     // Key of raw uri
     public static final String RAW_URI = "NTeRQWvye18AkPd6G";
     public static final String AUTO_INJECT = "wmHzgD4lOj5o4241";
+    public static final String RECORD_LAST_ACTIVITY = "Qw3YdfPUyc81O9Gj";
 
     private volatile static ARouter instance = null;
     private volatile static boolean hasInit = false;
@@ -130,11 +131,9 @@ public final class ARouter {
 
     /**
      * 开启记录跳转来源Activity的name，并通过bundle传递到目标Activity
-     *
-     * @param key 全局通用bundle的key
      */
-    public static void enableRecordLastActivity(String key) {
-        _ARouter.enableRecordLastActivity(key);
+    public static void enableRecordLastActivity( ) {
+        _ARouter.enableRecordLastActivity();
     }
 
     /**

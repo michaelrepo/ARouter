@@ -52,7 +52,7 @@ final class _ARouter {
     private volatile static boolean autoInject = false;
     private volatile static _ARouter instance = null;
     private volatile static boolean hasInit = false;
-    private static String recordLastActivityKey = null;
+    private volatile static boolean recordLastActivity = false;
     private volatile static ThreadPoolExecutor executor = DefaultPoolExecutor.getInstance();
     private static Handler mHandler;
     private static Context mContext;
@@ -171,8 +171,8 @@ final class _ARouter {
         }
     }
 
-    public static void enableRecordLastActivity(String key) {
-        recordLastActivityKey = key;
+    static synchronized void enableRecordLastActivity() {
+        recordLastActivity = true;
     }
 
     static void inject(Object thiz) {
@@ -337,7 +337,7 @@ final class _ARouter {
             return null;
         }
 
-        if (recordLastActivityKey != null && object != null) {
+        if (recordLastActivity && object != null) {
             processRecordLastActivity(object, postcard);
         }
 
@@ -382,7 +382,6 @@ final class _ARouter {
      * 处理记录上个页面的名字
      */
     private void processRecordLastActivity(Object object, Postcard postcard) {
-        if (postcard.getExtras().getString(recordLastActivityKey)!=null) return;//已经自定义传递了此键值，则不再使用注解中的 name。
         String routeName;
         Route route = null;
         if (object instanceof Activity) {
@@ -394,7 +393,7 @@ final class _ARouter {
         if (route != null) {
             routeName = route.name();
             if (!TextUtils.isEmpty(routeName)) {
-                postcard.getExtras().putString(recordLastActivityKey, routeName);
+                postcard.getExtras().putString(ARouter.RECORD_LAST_ACTIVITY, routeName);
             }
         }
     }
