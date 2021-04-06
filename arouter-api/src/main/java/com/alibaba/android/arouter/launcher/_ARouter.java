@@ -382,6 +382,7 @@ final class _ARouter {
      * 处理记录上个页面的名字
      */
     private void processRecordLastActivity(Object object, Postcard postcard) {
+        if (postcard.getExtras().getString(recordLastActivityKey)!=null) return;//已经自定义传递了此键值，则不再使用注解中的 name。
         String routeName;
         Route route = null;
         if (object instanceof Activity) {
@@ -392,7 +393,6 @@ final class _ARouter {
         }
         if (route != null) {
             routeName = route.name();
-
             if (!TextUtils.isEmpty(routeName)) {
                 postcard.getExtras().putString(recordLastActivityKey, routeName);
             }
