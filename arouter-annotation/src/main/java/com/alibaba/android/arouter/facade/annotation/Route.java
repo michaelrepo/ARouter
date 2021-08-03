@@ -32,6 +32,11 @@ public @interface Route {
     String name() default "";
 
     /**
+     * Temp name of route, used to record temp name for buried point.
+     */
+    String alias() default "";
+
+    /**
      * Extra data, can be set by user.
      * Ps. U should use the integer num sign the switch, by bits. 10001010101010
      */

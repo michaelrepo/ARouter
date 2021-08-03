@@ -40,6 +40,6 @@ public class HelloServiceImpl implements HelloService {
     public void sayHello(String name, ServiceCallback<String> serviceCallback) {
         if (serviceCallback != null)
             serviceCallback.result(new ServiceDataWrapper<>(new ServiceException("调用错误")));
-        serviceCallback.result(new ServiceDataWrapper<>("成功"));
+//        serviceCallback.result(new ServiceDataWrapper<>("成功"));
     }
 }

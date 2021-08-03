@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -382,20 +383,41 @@ final class _ARouter {
      * 处理记录上个页面的名字
      */
     private void processRecordLastActivity(Object object, Postcard postcard) {
-        String routeName;
+        String routeName = null;
         Route route = null;
         if (object instanceof Activity) {
-            route = object.getClass().getAnnotation(Route.class);
+            routeName = ((Activity) object).getIntent().getStringExtra(ARouter.LAST_PAGE_ALIAS);
+            if (!TextUtils.isEmpty(routeName)) {
+                ((Activity) object).getIntent().removeExtra(ARouter.LAST_PAGE_ALIAS);
+                postcard.getExtras().putString(ARouter.LAST_PAGE_NAME, routeName);
+            } else {
+                route = object.getClass().getAnnotation(Route.class);
+                if (route != null) {
+                    routeName = route.name();
+                    if (!TextUtils.isEmpty(routeName)) {
+                        postcard.getExtras().putString(ARouter.LAST_PAGE_NAME, routeName);
+                    }
+                }
+            }
 
         } else if (object instanceof Fragment && ((Fragment) object).getActivity() != null) {
-            route = ((Fragment) object).getActivity().getClass().getAnnotation(Route.class);
-        }
-        if (route != null) {
-            routeName = route.name();
+            routeName = ((Fragment) object).getActivity().getIntent().getStringExtra(ARouter.LAST_PAGE_ALIAS);
             if (!TextUtils.isEmpty(routeName)) {
-                postcard.getExtras().putString(ARouter.RECORD_LAST_ACTIVITY, routeName);
+                ((Fragment) object).getActivity().getIntent().removeExtra(ARouter.LAST_PAGE_ALIAS);
+                postcard.getExtras().putString(ARouter.LAST_PAGE_NAME, routeName);
+            } else {
+                route = object.getClass().getAnnotation(Route.class);
+                if (route != null) {
+                    routeName = route.name();
+                    if (!TextUtils.isEmpty(routeName)) {
+                        postcard.getExtras().putString(ARouter.LAST_PAGE_NAME, routeName);
+                    }
+                }
             }
+
         }
+
+
     }
 
     private Object _navigation(final Object object, final Postcard postcard,
@@ -551,5 +573,18 @@ final class _ARouter {
         }
 
         return false;
+    }
+
+    public void setRoutAlias(Object context, String alias) {
+        Intent intent;
+        if (context instanceof Activity) {
+            intent = ((Activity) context).getIntent();
+        } else if (context instanceof Fragment && ((Fragment) context).getActivity() != null) {
+            intent = ((Fragment) context).getActivity().getIntent();
+        } else {
+            throw new IllegalArgumentException("context must be Activity or Fragment");
+        }
+        assert intent != null;
+        intent.putExtra(ARouter.LAST_PAGE_ALIAS, alias);
     }
 }

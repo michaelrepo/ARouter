@@ -269,7 +269,7 @@ public final class Postcard extends RouteMeta {
         return this;
     }
 
-    public int getFlags() {
+    public  int getFlags() {
         return flags;
     }
 

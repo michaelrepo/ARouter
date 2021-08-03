@@ -1,13 +1,16 @@
 package com.alibaba.android.arouter.launcher;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
 import com.alibaba.android.arouter.exception.InitException;
 import com.alibaba.android.arouter.facade.Postcard;
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.alibaba.android.arouter.facade.template.ILogger;
 import com.alibaba.android.arouter.facade.template.IRouteGroup;
@@ -26,7 +29,8 @@ public final class ARouter {
     // Key of raw uri
     public static final String RAW_URI = "NTeRQWvye18AkPd6G";
     public static final String AUTO_INJECT = "wmHzgD4lOj5o4241";
-    public static final String RECORD_LAST_ACTIVITY = "Qw3YdfPUyc81O9Gj";
+    protected static final String LAST_PAGE_ALIAS = "Ud23dufW1pi92cSx";//记录上个页面的临时名
+    public static final String LAST_PAGE_NAME = "Qw3YdfPUyc81O9Gj";//记录上个页面的名
 
     private volatile static ARouter instance = null;
     private volatile static boolean hasInit = false;
@@ -132,7 +136,7 @@ public final class ARouter {
     /**
      * 开启记录跳转来源Activity的name，并通过bundle传递到目标Activity
      */
-    public static void enableRecordLastActivity( ) {
+    public static void enableRecordLastActivity() {
         _ARouter.enableRecordLastActivity();
     }
 
@@ -216,4 +220,17 @@ public final class ARouter {
     public boolean addRouteGroup(IRouteGroup group) {
         return _ARouter.getInstance().addRouteGroup(group);
     }
+
+    /**
+     * 设置Activity or Fragment Route注解的alias属性值，仅修改后的当次跳转有效，跳转后alias清空。
+     * 每个新的Activity or Fragment实例默认没有别名。
+     * routeName用于记录上个页面的名称
+     *
+     * @param context Activity or Fragment
+     * @param alias   Activity or Fragment
+     */
+    public void setRoutAlias(Object context, String alias) {
+        _ARouter.getInstance().setRoutAlias(context, alias);
+    }
+
 }

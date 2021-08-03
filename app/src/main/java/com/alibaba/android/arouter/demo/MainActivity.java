@@ -21,6 +21,7 @@ import com.alibaba.android.arouter.demo.service.model.TestSerializable;
 import com.alibaba.android.arouter.demo.service.HelloService;
 import com.alibaba.android.arouter.demo.module1.testservice.SingleService;
 import com.alibaba.android.arouter.facade.Postcard;
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.callback.NavCallback;
 import com.alibaba.android.arouter.facade.callback.ServiceCallback;
 import com.alibaba.android.arouter.facade.callback.ServiceDataWrapper;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Route(path = "/lib/main", name = "首页")
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.openLog:
                 ARouter.openLog();
+//                ARouter.printStackTrace();
                 break;
             case R.id.openDebug:
                 ARouter.openDebug();
@@ -76,9 +79,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.normalNavigation:
                 ARouter.getInstance().navigation(HelloService.class).sayHello("", null);
+                ARouter.getInstance().setRoutAlias(this, "页面别名1");
                 ARouter.getInstance()
                         .build("/test/activity2")
-                        .navigation();
+                        .navigation(this);
 
                 // 也可以通过依赖对方提供的二方包来约束入参
                 // 非必须，可以通过这种方式调用
@@ -104,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.oldVersionAnim:
+                ARouter.getInstance().setRoutAlias(this, "页面别名2");
+
                 ARouter.getInstance()
                         .build("/test/activity2")
                         .withTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom)
@@ -117,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     ARouter.getInstance()
                             .build("/test/activity2")
                             .withOptionsCompat(compat)
-                            .navigation();
+                            .navigation(this);
                 } else {
                     Toast.makeText(this, "API < 16,不支持新版本动画", Toast.LENGTH_SHORT).show();
                 }
