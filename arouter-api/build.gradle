@@ -39,8 +39,8 @@ android {
 dependencies {
     annotationProcessor project(':arouter-compiler')
     api project(':arouter-annotation')
-//    annotationProcessor 'com.github.michaelrepo.arouter:arouter-compiler:1.5.3'
-//    api 'com.github.michaelrepo.arouter:arouter-annotation:1.5.3'
+//    annotationProcessor 'com.github.michaelrepo.ARouter:arouter-compiler:1.5.3'
+//    api 'com.github.michaelrepo.ARouter:arouter-annotation:1.5.3'
     api 'com.google.android.material:material:1.3.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
 }

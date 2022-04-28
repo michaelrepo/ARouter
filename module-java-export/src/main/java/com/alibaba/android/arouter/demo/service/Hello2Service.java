@@ -1,8 +1,6 @@
 package com.alibaba.android.arouter.demo.service;
 
 
-import android.util.Log;
-
 import com.alibaba.android.arouter.facade.callback.ServiceCallback;
 import com.alibaba.android.arouter.facade.template.IProvider;
 
@@ -13,12 +11,6 @@ import com.alibaba.android.arouter.facade.template.IProvider;
  * @version 1.0
  * @since 2017/1/3 10:26
  */
-public interface HelloService extends IProvider {
-  void sayHello(String name, ServiceCallback<String> serviceCallback);
-
-  default  void observers(){
-    Log.d("HelloServiceImpl", "observer");
-
-
-  }
+public interface Hello2Service extends IProvider {
+  void sayHello2(String name, ServiceCallback<String> serviceCallback);
 }

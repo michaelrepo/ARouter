@@ -12,7 +12,7 @@ compileJava {
 }
 
 dependencies {
-//    implementation 'com.github.michaelrepo.arouter:arouter-annotation:1.5.3'
+//    implementation 'com.github.michaelrepo.ARouter:arouter-annotation:1.5.3'
     implementation project(':arouter-annotation')
 
     annotationProcessor 'com.google.auto.service:auto-service:1.0-rc7'

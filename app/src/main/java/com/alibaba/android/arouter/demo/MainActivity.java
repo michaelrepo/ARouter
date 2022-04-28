@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.demo.module1.testactivity.TestDynamicActivity;
+import com.alibaba.android.arouter.demo.service.Hello2Service;
 import com.alibaba.android.arouter.demo.service.model.TestObj;
 import com.alibaba.android.arouter.demo.service.model.TestParcelable;
 import com.alibaba.android.arouter.demo.service.model.TestSerializable;
@@ -166,15 +167,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .navigation();
                 break;
             case R.id.navByName:
+                //可以实现多接口
                 ((HelloService) ARouter.getInstance().build("/yourservicegroupname/hello").navigation()).sayHello("mike", new ServiceCallback<String>() {
                     @Override
                     public void result(ServiceDataWrapper<String> serviceDataWrapper) {
-
+                        Toast.makeText(MainActivity.this, serviceDataWrapper.data, Toast.LENGTH_SHORT).show();
                     }
                 });
+
+                ((Hello2Service) ARouter.getInstance().build("/yourservicegroupname/hello").navigation()).sayHello2("mike", new ServiceCallback<String>() {
+                    @Override
+                    public void result(ServiceDataWrapper<String> serviceDataWrapper) {
+                        Toast.makeText(MainActivity.this, serviceDataWrapper.data, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                ((HelloService) ARouter.getInstance().build("/yourservicegroupname/hello").navigation()).observers();
                 break;
             case R.id.navByType:
                 ARouter.getInstance().navigation(HelloService.class).sayHello("mike", null);
+//                ARouter.getInstance().navigation(Hello2Service.class).sayHello2("mike", null);
                 break;
             case R.id.navToMoudle1:
                 ARouter.getInstance().build("/module/1").navigation();
@@ -219,6 +231,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ARouter.getInstance().navigation(MainActivity.class);
                 break;
             case R.id.normalNavigation2:
+                ARouter.getInstance()
+                        .build("/test/activity2")
+                        .navigation(this, 666);
+                break;
+            case R.id.normalNavigation3:
                 ARouter.getInstance()
                         .build("/test/activity2")
                         .navigation(this, 666);

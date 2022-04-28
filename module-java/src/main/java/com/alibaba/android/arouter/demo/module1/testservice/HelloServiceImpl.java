@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.alibaba.android.arouter.demo.service.Hello2Service;
 import com.alibaba.android.arouter.demo.service.HelloService;
 import com.alibaba.android.arouter.exception.ServiceException;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -21,7 +22,7 @@ import com.alibaba.android.arouter.facade.callback.ServiceDataWrapper;
  * @since 2017/1/3 10:26
  */
 @Route(path = "/yourservicegroupname/hello")
-public class HelloServiceImpl implements HelloService {
+public class HelloServiceImpl implements HelloService, Hello2Service {
     Context mContext;
 
 
@@ -33,13 +34,34 @@ public class HelloServiceImpl implements HelloService {
     @Override
     public void init(Context context) {
         mContext = context;
-        Log.e("testService", HelloService.class.getName() + " has init.");
+        Log.d("HelloServiceImpl", HelloService.class.getName() + " has init.");
     }
 
     @Override
     public void sayHello(String name, ServiceCallback<String> serviceCallback) {
         if (serviceCallback != null)
-            serviceCallback.result(new ServiceDataWrapper<>(new ServiceException("调用错误")));
-//        serviceCallback.result(new ServiceDataWrapper<>("成功"));
+//            serviceCallback.result(new ServiceDataWrapper<>(new ServiceException("调用错误")));
+            serviceCallback.result(new ServiceDataWrapper<>("sayHello调用成功"));
+        Log.d("HelloServiceImpl", "hello service");
+    }
+
+
+    @Override
+    public void sayHello2(String name, ServiceCallback<String> serviceCallback) {
+        if (serviceCallback != null)
+//            serviceCallback.result(new ServiceDataWrapper<>(new ServiceException("调用错误")));
+            serviceCallback.result(new ServiceDataWrapper<>("sayHello2调用成功"));
+        Log.d("HelloServiceImpl", "hello service2");
+
+    }
+
+    @Override
+    public void observers() {
+        Log.d("HelloServiceImpl", "observer impl");
+        fff();
+    }
+
+    static void fff() {
+
     }
 }
