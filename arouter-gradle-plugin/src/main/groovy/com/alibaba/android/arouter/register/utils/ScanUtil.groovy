@@ -29,7 +29,7 @@ class ScanUtil {
             while (enumeration.hasMoreElements()) {
                 JarEntry jarEntry = (JarEntry) enumeration.nextElement()
                 String entryName = jarEntry.getName()
-                if (entryName.startsWith(ScanSetting.ROUTER_CLASS_PACKAGE_NAME)) {
+                if (!jarEntry.isDirectory() && entryName.startsWith(ScanSetting.ROUTER_CLASS_PACKAGE_NAME)) {
                     InputStream inputStream = file.getInputStream(jarEntry)
                     scanClass(inputStream)
                     inputStream.close()
