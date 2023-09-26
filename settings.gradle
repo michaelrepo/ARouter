@@ -5,6 +5,22 @@ pluginManagement {
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
         google()
+        maven {
+            credentials {
+                username MAVEN_USER
+                password MAVEN_PASSWORD
+            }
+            url MAVEN_RELEASE_URL
+            allowInsecureProtocol true
+        }
+        maven {
+            credentials {
+                username MAVEN_USER
+                password MAVEN_PASSWORD
+            }
+            url MAVEN_SNAPSHOT_URL
+            allowInsecureProtocol true
+        }
     }
 }
 dependencyResolutionManagement {
@@ -14,6 +30,22 @@ dependencyResolutionManagement {
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
         google()
+        maven {
+            credentials {
+                username MAVEN_USER
+                password MAVEN_PASSWORD
+            }
+            url MAVEN_RELEASE_URL
+            allowInsecureProtocol true
+        }
+        maven {
+            credentials {
+                username MAVEN_USER
+                password MAVEN_PASSWORD
+            }
+            url MAVEN_SNAPSHOT_URL
+            allowInsecureProtocol true
+        }
     }
 }
 

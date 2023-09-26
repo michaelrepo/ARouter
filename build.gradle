@@ -6,12 +6,28 @@ buildscript {
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
         google()
+        maven {
+            credentials {
+                username MAVEN_USER
+                password MAVEN_PASSWORD
+            }
+            url MAVEN_RELEASE_URL
+            allowInsecureProtocol true
+        }
+        maven {
+            credentials {
+                username MAVEN_USER
+                password MAVEN_PASSWORD
+            }
+            url MAVEN_SNAPSHOT_URL
+            allowInsecureProtocol true
+        }
     }
     dependencies {
 //        classpath 'com.android.tools.build:gradle:8.1.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0"
-        classpath "com.github.jadepeakpoet.ARouter:arouter-register:$arouter_register_version"
+        classpath "com.5i5j.common.arouter:arouter-register:1.6.8"
     }
 }
 

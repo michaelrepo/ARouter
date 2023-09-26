@@ -14,4 +14,14 @@ dependencies {
     implementation "org.ow2.asm:asm-util:9.2"
     implementation 'com.android.tools.build:gradle:8.0.0'
 }
+
+gradlePlugin {
+    plugins {
+        ArouterPlugin {
+            id = 'com.alibaba.arouter'
+            implementationClass = 'com.alibaba.android.arouter.register.launch.PluginLaunch'
+        }
+    }
+}
+
 apply from: rootProject.file('gradle/publish.gradle')

@@ -14,15 +14,28 @@ if (androidLibrary) {
 publishing {
     publications {
         release(MavenPublication) {
-            groupId = GROUP
+            groupId = MAVEN_GROUPID
             artifactId = POM_ARTIFACT_ID
-//            version = '1.0'
+            version = VERSION
             afterEvaluate {
                 if (androidLibrary) {
                     from components.release
                 } else {
                     from components.java
                 }
+            }
+        }
+    }
+    repositories {
+        maven {
+            // 可以有且仅有一个仓库不指定 name 属性，会隐式设置为 Maven
+            // 根据libVersionName判断仓库地址
+            url = MAVEN_RELEASE_URL
+            name = "Remote"
+            // 仓库用户名密码
+            credentials {
+                username = MAVEN_USER
+                password = MAVEN_PASSWORD
             }
         }
     }
