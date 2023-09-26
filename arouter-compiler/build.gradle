@@ -1,27 +1,31 @@
-apply plugin: 'java'
-
+plugins {
+    id 'java'
+}
 
 // JitPack Maven
-apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.github.dcendents.android-maven'
 // Your Group
-group = 'com.github.michaelrepo'
+//group = 'com.github.michaelrepo'
 
 compileJava {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 dependencies {
 //    implementation 'com.github.michaelrepo.ARouter:arouter-annotation:1.5.3'
     implementation project(':arouter-annotation')
 
-    annotationProcessor 'com.google.auto.service:auto-service:1.0-rc7'
-    compileOnly 'com.google.auto.service:auto-service-annotations:1.0-rc7'
+    annotationProcessor 'com.google.auto.service:auto-service:1.0.1'
+    compileOnly 'com.google.auto.service:auto-service-annotations:1.0.1'
 
-    implementation 'com.squareup:javapoet:1.12.1'
+    implementation 'com.squareup:javapoet:1.13.0'
 
-    implementation 'org.apache.commons:commons-lang3:3.5'
-    implementation 'org.apache.commons:commons-collections4:4.1'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.apache.commons:commons-collections4:4.4'
 
-    implementation 'com.alibaba:fastjson:1.2.69'
+    implementation 'com.alibaba:fastjson:1.2.83'
 }
+
+
+apply from: rootProject.file('gradle/publish.gradle')

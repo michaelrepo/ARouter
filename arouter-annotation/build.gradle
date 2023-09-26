@@ -1,11 +1,13 @@
-apply plugin: 'java'
+plugins {
+    id 'java'
+}
 
 // JitPack Maven
-apply plugin: 'com.github.dcendents.android-maven'
+////apply plugin: 'com.github.dcendents.android-maven'
 // Your Group
-group='com.github.michaelrepo'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
+apply from: rootProject.file('gradle/publish.gradle')
