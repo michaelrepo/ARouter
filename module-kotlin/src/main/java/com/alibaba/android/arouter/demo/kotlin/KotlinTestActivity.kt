@@ -1,6 +1,7 @@
 package com.alibaba.android.arouter.demo.kotlin
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import com.alibaba.android.arouter.facade.annotation.Autowired
@@ -24,5 +25,11 @@ class KotlinTestActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kotlin_test)
         findViewById<TextView>(R.id.content).text = "name = $name, age = $age"
+        findViewById<TextView>(R.id.content).setOnClickListener {
+            val intent=Intent()
+            intent.putExtra("cityName","北京")
+            setResult(RESULT_OK, intent)
+            finish()
+        }
     }
 }

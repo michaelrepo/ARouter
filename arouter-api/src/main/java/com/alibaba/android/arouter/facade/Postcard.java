@@ -6,10 +6,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
+
 import android.util.SparseArray;
 
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
@@ -144,7 +149,7 @@ public final class Postcard extends RouteMeta {
      * @param context Activity and so on.
      */
     public Object navigation(Context context, NavigationCallback callback) {
-        return ARouter.getInstance().navigation(context, this, -1, callback);
+        return ARouter.getInstance().navigation(context, this, -1, null, callback);
     }
 
     /**
@@ -164,9 +169,23 @@ public final class Postcard extends RouteMeta {
      * @param requestCode startActivityForResult's param
      */
     public void navigation(Activity mContext, int requestCode, NavigationCallback callback) {
-        ARouter.getInstance().navigation(mContext, this, requestCode, callback);
+        ARouter.getInstance().navigation(mContext, this, requestCode, null, callback);
     }
 
+    /**
+     * Navigation to the route with path in postcard.
+     */
+    public <O> void navigation(Activity mContext, ActivityResultLauncher<Intent> activityResultLauncher) {
+        ARouter.getInstance().navigation(mContext, this, -1, activityResultLauncher, null);
+    }
+
+
+    /**
+     * Navigation to the route with path in postcard.
+     */
+    public void navigation(Activity mContext, ActivityResultLauncher<Intent> activityResultLauncher, NavigationCallback callback) {
+        ARouter.getInstance().navigation(mContext, this, -1, activityResultLauncher, callback);
+    }
 
     /**
      * Navigation to the route with path in postcard.
@@ -185,7 +204,17 @@ public final class Postcard extends RouteMeta {
      * @param requestCode startActivityForResult's param
      */
     public void navigation(Fragment fragment, int requestCode, NavigationCallback callback) {
-        ARouter.getInstance().navigation(fragment, this, requestCode, callback);
+        ARouter.getInstance().navigation(fragment, this, requestCode, null, callback);
+    }
+
+    /**
+     * Navigation to the route with path in postcard.
+     *
+     * @param fragment    Activity and so on.
+     * @param requestCode startActivityForResult's param
+     */
+    public void navigation(Fragment fragment, int requestCode, ActivityResultLauncher<Intent> activityResultLauncher, NavigationCallback callback) {
+        ARouter.getInstance().navigation(fragment, this, requestCode, activityResultLauncher, callback);
     }
 
     /**
@@ -269,7 +298,7 @@ public final class Postcard extends RouteMeta {
         return this;
     }
 
-    public  int getFlags() {
+    public int getFlags() {
         return flags;
     }
 

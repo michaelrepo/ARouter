@@ -1,5 +1,8 @@
 package com.alibaba.android.arouter.launcher;
 
+import static androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult.EXTRA_ACTIVITY_OPTIONS_BUNDLE;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -9,6 +12,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.activity.ComponentActivity;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -290,7 +298,7 @@ final class _ARouter {
      * @param requestCode RequestCode
      * @param callback    cb
      */
-    protected Object navigation(final Object object, final Postcard postcard, final int requestCode, final NavigationCallback callback) {
+    protected Object navigation(final Object object, final Postcard postcard, final int requestCode, final ActivityResultLauncher<Intent> activityResultLauncher, final NavigationCallback callback) {
         Context context = null;
         if (object != null) {
             if (object instanceof Context) {
@@ -355,7 +363,7 @@ final class _ARouter {
                  */
                 @Override
                 public void onContinue(Postcard postcard) {
-                    _navigation(object, postcard, requestCode, callback);
+                    _navigation(object, postcard, requestCode, activityResultLauncher, callback);
                 }
 
                 /**
@@ -373,7 +381,7 @@ final class _ARouter {
                 }
             });
         } else {
-            return _navigation(object, postcard, requestCode, callback);
+            return _navigation(object, postcard, requestCode, activityResultLauncher, callback);
         }
 
         return null;
@@ -420,11 +428,9 @@ final class _ARouter {
 
     }
 
-    private Object _navigation(final Object object, final Postcard postcard,
-                               final int requestCode, final NavigationCallback callback) {
+    @SuppressLint("WrongConstant")
+    private Object _navigation(final Object object, final Postcard postcard, final int requestCode, final ActivityResultLauncher<Intent> activityResultLauncher, final NavigationCallback callback) {
         final Context currentContext = postcard.getContext();
-
-
         switch (postcard.getType()) {
             case ACTIVITY:
                 // Build intent
@@ -453,9 +459,9 @@ final class _ARouter {
                     @Override
                     public void run() {
                         if (object instanceof Fragment) {
-                            startActivity(currentContext, (Fragment) object, intent, requestCode, postcard, callback);
+                            startActivity(currentContext, (Fragment) object, intent, requestCode, activityResultLauncher, postcard, callback);
                         } else {
-                            startActivity(requestCode, currentContext, intent, postcard, callback);
+                            startActivity(requestCode, activityResultLauncher, currentContext, intent, postcard, callback);
                         }
                     }
                 });
@@ -501,11 +507,20 @@ final class _ARouter {
      *
      * @see ActivityCompat
      */
-    private void startActivity(int requestCode, Context currentContext, Intent
-            intent, Postcard postcard, NavigationCallback callback) {
+    private void startActivity(int requestCode, ActivityResultLauncher<Intent> activityResultLauncher, Context currentContext, Intent intent, Postcard postcard, NavigationCallback callback) {
         if (requestCode >= 0) {  // Need start for result
             if (currentContext instanceof Activity) {
                 ActivityCompat.startActivityForResult((Activity) currentContext, intent, requestCode, postcard.getOptionsBundle());
+            } else {
+                logger.warning(Consts.TAG, "Must use [navigation(activity, ...)] to support [startActivityForResult]");
+            }
+        } else if (activityResultLauncher != null) { // Need start for activityResultCallback
+            if (currentContext instanceof ComponentActivity) {
+                Bundle optionsCompat = postcard.getOptionsBundle();
+                if (intent != null && optionsCompat != null) {
+                    intent.putExtra(EXTRA_ACTIVITY_OPTIONS_BUNDLE, optionsCompat);
+                }
+                activityResultLauncher.launch(intent);
             } else {
                 logger.warning(Consts.TAG, "Must use [navigation(activity, ...)] to support [startActivityForResult]");
             }
@@ -523,9 +538,16 @@ final class _ARouter {
     }
 
 
-    private void startActivity(Context currentContext, Fragment fragment, Intent intent,
-                               int requestCode, Postcard postcard, NavigationCallback callback) {
-        fragment.startActivityForResult(intent, requestCode, postcard.getOptionsBundle());
+    private void startActivity(Context currentContext, Fragment fragment, Intent intent, int requestCode, ActivityResultLauncher<Intent> activityResultLauncher, Postcard postcard, NavigationCallback callback) {
+        if (activityResultLauncher != null) {
+            Bundle optionsCompat = postcard.getOptionsBundle();
+            if (intent != null && optionsCompat != null) {
+                intent.putExtra(EXTRA_ACTIVITY_OPTIONS_BUNDLE, optionsCompat);
+            }
+            activityResultLauncher.launch(intent);
+        } else {
+            fragment.startActivityForResult(intent, requestCode, postcard.getOptionsBundle());
+        }
         if ((-1 != postcard.getEnterAnim() && -1 != postcard.getExitAnim()) && currentContext instanceof Activity) {    // Old version.
             ((Activity) postcard.getContext()).overridePendingTransition(postcard.getEnterAnim(), postcard.getExitAnim());
         }

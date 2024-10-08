@@ -1,6 +1,12 @@
 package com.alibaba.android.arouter.demo;
 
+import androidx.activity.ComponentActivity;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -38,6 +44,16 @@ import java.util.Map;
 
 @Route(path = "/lib/main", name = "首页")
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                Intent data = result.getData();
+                String cityName = data.getStringExtra("cityName");
+                Toast.makeText(this, cityName, Toast.LENGTH_SHORT).show();
+            }
+    );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .build("/kotlin/test")
                     .withString("name", "老王")
                     .withInt("age", 23)
-                    .navigation();
+                    .navigation(this);
         } else if (id == R.id.normalNavigationWithParams) {// ARouter.getInstance()
             //         .build("/test/activity2")
             //         .withString("key1", "value1")

@@ -3,9 +3,13 @@ package com.alibaba.android.arouter.launcher;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.fragment.app.Fragment;
 
 import com.alibaba.android.arouter.exception.InitException;
@@ -195,8 +199,8 @@ public final class ARouter {
      * @param requestCode Set for startActivityForResult
      * @param callback    cb
      */
-    public Object navigation(Context mContext, Postcard postcard, int requestCode, NavigationCallback callback) {
-        return _ARouter.getInstance().navigation(mContext, postcard, requestCode, callback);
+    public Object navigation(Context mContext, Postcard postcard, int requestCode, ActivityResultLauncher<Intent> activityResultLauncher, NavigationCallback callback) {
+        return _ARouter.getInstance().navigation(mContext, postcard, requestCode, activityResultLauncher, callback);
     }
 
     /**
@@ -207,8 +211,8 @@ public final class ARouter {
      * @param requestCode Set for startActivityForResult
      * @param callback    cb
      */
-    public Object navigation(Fragment fragment, Postcard postcard, int requestCode, NavigationCallback callback) {
-        return _ARouter.getInstance().navigation(fragment, postcard, requestCode, callback);
+    public Object navigation(Fragment fragment, Postcard postcard, int requestCode, ActivityResultLauncher<Intent> activityResultLauncher, NavigationCallback callback) {
+        return _ARouter.getInstance().navigation(fragment, postcard, requestCode, activityResultLauncher, callback);
     }
 
     /**
